@@ -1,0 +1,28 @@
+/* =========================
+   iPhone 縦画面専用CSS
+   ========================= */
+@media screen and (max-width: 430px) {
+  body { padding: 0; }
+  main { padding: 8px 8px 16px; }
+  header { padding: 12px 8px 8px; }
+  h1 { font-size: 16px; }
+  .sub { font-size: 11px; line-height: 1.35; }
+
+  .controls { gap: 6px; }
+  .controls label { padding: 6px 8px; font-size: 12px; border-radius: 10px; }
+  input[type="number"], select { width: 72px; font-size: 12px; padding: 6px; }
+  button { padding: 8px 10px; font-size: 13px; }
+
+  .resultRow { gap: 8px; padding-bottom: 4px; }
+  .card { flex: 0 0 175px; }
+  .imgWrap { height: 120px; }
+  .cardHead { padding: 6px 8px; }
+  .cardHead .name { font-size: 12px; }
+  .pill { font-size: 10px; padding: 3px 6px; }
+  .fallback { font-size: 10px; padding: 6px 8px; }
+
+  .block { padding: 8px; }
+  .blockHead { margin-bottom: 6px; }
+  .blockHead b { font-size: 13px; }
+  .blockHead .meta { font-size: 11px; }
+}
