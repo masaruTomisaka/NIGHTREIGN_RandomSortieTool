@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>NIGHTREIGN ボス＆キャラ 抽選ツール</title>
+  <title>NIGHTREIGN ランダム出撃ツール</title>
 
-  <!-- CSS分離版 -->
   <link rel="stylesheet" href="./css/base.css" />
   <link rel="stylesheet" href="./css/components.css" />
   <link rel="stylesheet" href="./css/iphone-portrait.css" />
@@ -13,12 +12,7 @@
 
 <body>
 <header>
-  <h1>ELDEN RING NIGHTREIGN：ボス＆キャラ 抽選ツール</h1>
-  <div class="sub">
-    ・表示は常に <b>1行</b>： <b>ボス → キャラ①〜③</b>（画面が狭い場合は横スクロール）<br/>
-    ・フィルタ（通常/常夜/深き夜・DLC）は「キャラ重複可」等と同じ領域に統合<br/>
-    ・キャラ枠色：<b>キャラ1＝赤</b>、<b>キャラ2＝青</b>、<b>キャラ3＝緑</b>
-  </div>
+  <h1>ELDEN RING NIGHTREIGN：ランダム出撃ツール</h1>
 </header>
 
 <main>
@@ -30,7 +24,7 @@
         <input id="playerCount" type="number" min="1" max="3" value="3">
       </label>
 
-      <label>抽選回数（まとめて）
+      <label>抽選回数
         <input id="rollCount" type="number" min="1" max="50" value="1">
       </label>
 
@@ -63,20 +57,16 @@
 
       <label class="filterTag" style="--stage:#ffcc66;">
         <span class="dot" style="background:#ffcc66;"></span>
-        <input type="checkbox" id="fDLC" checked> DLCを含める（ボス/キャラ）
+        <input type="checkbox" id="fDLC" checked> DLCを含める
       </label>
 
       <button id="startBtn">抽選開始</button>
       <button id="clearBtn" class="secondary">クリア</button>
     </div>
 
-    <div class="hint">
-      常夜は日替わり枠のため「常夜①〜③」表記とする。画像は <b>images/chars/</b> と <b>images/stages/</b> 配下に配置する。
-    </div>
-
     <div id="warnBox" class="warn"></div>
 
-    <h2 style="margin-top:18px;">抽選結果（履歴）</h2>
+    <h2 style="margin-top:18px;">抽選結果</h2>
     <div id="history" style="margin-top:10px; display:grid; gap:12px;"></div>
   </section>
 </main>
@@ -84,42 +74,42 @@
 <script>
   // ===== キャラ定義（key/ファイル名は英名、表示は和名） =====
   const CHARACTERS = [
-    { key:"wylder",     name:"追跡者", img:"images/chars/wylder.png",     dlc:false },
-    { key:"guardian",   name:"守護者", img:"images/chars/guardian.png",   dlc:false },
-    { key:"ironeye",    name:"鉄の目", img:"images/chars/ironeye.png",    dlc:false },
-    { key:"duchess",    name:"レディ", img:"images/chars/duchess.png",    dlc:false },
-    { key:"raider",     name:"無頼漢", img:"images/chars/raider.png",     dlc:false },
-    { key:"revenant",   name:"復讐者", img:"images/chars/revenant.png",   dlc:false },
-    { key:"recluse",    name:"隠者",   img:"images/chars/recluse.png",    dlc:false },
-    { key:"executor",   name:"執行者", img:"images/chars/executor.png",   dlc:false },
+    { key:"wylder",     name:"追跡者", img:"https://img.gamewith.jp/img/68fa049a304ba02481ebc5833da6f5f0.png",     dlc:false },
+    { key:"guardian",   name:"守護者", img:"https://img.gamewith.jp/img/ff9a88020ff4c03b949be9b3a45f2962.png",   dlc:false },
+    { key:"ironeye",    name:"鉄の目", img:"https://img.gamewith.jp/img/d25e1bc48b824ce4481c874556a11030.png",    dlc:false },
+    { key:"duchess",    name:"レディ", img:"https://img.gamewith.jp/img/eb358b8c34d2df0e3b257df18520ab6a.png",    dlc:false },
+    { key:"raider",     name:"無頼漢", img:"https://img.gamewith.jp/img/4c0db0c00e5de40220c9dd9794ef78d0.png",     dlc:false },
+    { key:"revenant",   name:"復讐者", img:"https://img.gamewith.jp/img/111f105fad7797802953a09e3aaae886.png",   dlc:false },
+    { key:"recluse",    name:"隠者",   img:"https://img.gamewith.jp/img/2bdb68d9b79ae75d0a175ee028167122.png",    dlc:false },
+    { key:"executor",   name:"執行者", img:"https://img.gamewith.jp/img/b1e7abaf1e4dea1d9326aae3cd196ae0.png",   dlc:false },
     // DLC
-    { key:"scholar",    name:"学者",   img:"images/chars/scholar.png",    dlc:true  },
-    { key:"undertaker", name:"葬儀屋", img:"images/chars/undertaker.png", dlc:true  }
+    { key:"scholar",    name:"学者",   img:"https://img.gamewith.jp/img/a5663f5ca25970cbae7ecd66a7cd45c7.png",    dlc:true  },
+    { key:"undertaker", name:"葬儀屋", img:"https://img.gamewith.jp/img/8e5a1b7c84e8fa23424d4accbb6fe263.png", dlc:true  }
   ];
 
   // ===== ボス/ステージ定義 =====
   const STAGES = [
     // 通常（本編）
-    { name:"三つ首の獣",       type:"通常",   dlc:false, img:"images/stages/gladius.jpg" },
-    { name:"喰らいつく顎",     type:"通常",   dlc:false, img:"images/stages/adel.jpg" },
-    { name:"知性の蟲",         type:"通常",   dlc:false, img:"images/stages/gnoster.jpg" },
-    { name:"兆し",             type:"通常",   dlc:false, img:"images/stages/maris.jpg" },
-    { name:"調律の魔物",       type:"通常",   dlc:false, img:"images/stages/libra.jpg" },
-    { name:"闇駆ける狩人",     type:"通常",   dlc:false, img:"images/stages/fulghor.jpg" },
-    { name:"霧の裂け目",       type:"通常",   dlc:false, img:"images/stages/caligo.jpg" },
-    { name:"夜を象る者",       type:"通常",   dlc:false, img:"images/stages/nameless.jpg" },
+    { name:"三つ首の獣",       type:"通常",   dlc:false, img:"https://img.gamewith.jp/img/5be58aa5bb22342c03ca1ab20171de64.png" },
+    { name:"喰らいつく顎",     type:"通常",   dlc:false, img:"https://img.gamewith.jp/img/fe592489b2c001299bc31fa060fb2e9f.png" },
+    { name:"知性の蟲",         type:"通常",   dlc:false, img:"https://img.gamewith.jp/img/f142d8630b6eb6587b69de6f4530c603.png" },
+    { name:"兆し",             type:"通常",   dlc:false, img:"https://img.gamewith.jp/img/b3f0232284df2d549777e3f32af5927f.png" },
+    { name:"調律の魔物",       type:"通常",   dlc:false, img:"https://img.gamewith.jp/img/64cd7fbafccf7116d1004f2cd7da9023.png" },
+    { name:"闇駆ける狩人",     type:"通常",   dlc:false, img:"https://img.gamewith.jp/img/4fdfba64d501eeea9d4d053d37091828.jpg" },
+    { name:"霧の裂け目",       type:"通常",   dlc:false, img:"https://img.gamewith.jp/img/769309700c3f36cfcad4f304632aa219.png" },
+    { name:"夜を象る者",       type:"通常",   dlc:false, img:"https://img.gamewith.jp/img/8b4d1ec87e3760bc97931c5446d70868.png" },
 
     // 通常（DLC）
-    { name:"安寧者たち", type:"通常", dlc:true, img:"images/stages/harmonia.jpg" },
-    { name:"瓦礫の王",   type:"通常", dlc:true, img:"images/stages/straghess.jpg" },
+    { name:"安寧者たち", type:"通常", dlc:true, img:"https://img.gamewith.jp/img/a5ff91b5bce189ea26552e571b176723.png" },
+    { name:"瓦礫の王",   type:"通常", dlc:true, img:"https://img.gamewith.jp/img/6660b03a33990ae9ff2437f63e3289cc.png" },
 
     // 常夜（日替わり枠：①〜③）
-    { name:"常夜①", type:"常夜", dlc:false, img:"images/stages/everdark_01.jpg" },
-    { name:"常夜②", type:"常夜", dlc:false, img:"images/stages/everdark_02.jpg" },
-    { name:"常夜③", type:"常夜", dlc:false, img:"images/stages/everdark_03.jpg" },
+    { name:"常夜①", type:"常夜", dlc:false, img:"https://media.fromsoftware.jp/nightreign/resources/images/gallery/pc/screenshot/003@0.75x.jpg" },
+    { name:"常夜②", type:"常夜", dlc:false, img:"https://media.fromsoftware.jp/nightreign/resources/images/gallery/pc/screenshot/003@0.75x.jpg" },
+    { name:"常夜③", type:"常夜", dlc:false, img:"https://media.fromsoftware.jp/nightreign/resources/images/gallery/pc/screenshot/003@0.75x.jpg" },
 
     // 深き夜（モード枠）
-    { name:"深き夜", type:"深き夜", dlc:false, img:"images/stages/deep.jpg" }
+    { name:"深き夜", type:"深き夜", dlc:false, img:"https://media.fromsoftware.jp/nightreign/resources/images/article/250828_1/pc/02@0.75x.jpg" }
   ];
 
   // ===== Elements =====
@@ -253,9 +243,7 @@
       pill: `${escapeHtml(stageObj.type)}${stageObj.dlc ? " / DLC" : ""}`,
       imgSrc: stageObj.img,
       imgAlt: stageObj.name,
-      fallbackHtml:
-        `image: <span style="color:#dbe3ff;">${escapeHtml(stageObj.img)}</span><br/>` +
-        `type: <b>${escapeHtml(stageObj.type)}</b> / DLC: <b style="color:${stageObj.dlc ? "#ffcc66" : "#a8b0c2"};">${stageObj.dlc ? "ON" : "OFF"}</b>`,
+      fallbackHtml: "",
       extraClass: `bossCard ${stageClass(stageObj.type)}`
     });
   }
@@ -266,9 +254,7 @@
       pill: `CHAR${c.dlc ? " / DLC" : ""}`,
       imgSrc: c.img,
       imgAlt: c.name,
-      fallbackHtml:
-        `image: <span style="color:#dbe3ff;">${escapeHtml(c.img)}</span>` +
-        (c.dlc ? ` <span style="color:#ffcc66; font-weight:900;">/ DLC</span>` : ``),
+      fallbackHtml: "",
       extraClass: charFrameClass(idx)
     });
   }
