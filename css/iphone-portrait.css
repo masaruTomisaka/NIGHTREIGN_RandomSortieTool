@@ -13,7 +13,12 @@
   input[type="number"], select { width: 72px; font-size: 12px; padding: 6px; }
   button { padding: 8px 10px; font-size: 13px; }
 
-  .resultRow { gap: 8px; padding-bottom: 4px; }
+  .resultRow {
+     gap: 8px;
+     padding-bottom: 4px;
+     padding-right: calc(16px + env(safe-area-inset-right);
+     -webkit-overflow-scrolling: touch;
+  }
   .card { flex: 0 0 175px; }
   .imgWrap { height: 120px; }
   .cardHead { padding: 6px 8px; }
