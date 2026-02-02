@@ -21,23 +21,14 @@
 
     <div class="controls">
       <label>出撃キャラ数
-        <input id="playerCount" type="number" min="1" max="3" value="3">
-      </label>
-
-      <label>抽選回数
-        <input id="rollCount" type="number" min="1" max="50" value="1">
+        <input type="radio" name="playerCount" id="playerCount1" value="1"><span>1</span>
+        <input type="radio" name="playerCount" id="playerCount2" value="2"><span>2</span>
+        <input type="radio" name="playerCount" id="playerCount3" value="3" checked><span>3</span>
       </label>
 
       <label>
         <input id="allowDup" type="checkbox" checked>
         キャラ重複可
-      </label>
-
-      <label>表示モード
-        <select id="viewMode">
-          <option value="latest">最新のみ</option>
-          <option value="stack">履歴を積む</option>
-        </select>
       </label>
 
       <label class="filterTag stage-normal" style="--stage:#7aa2ff;">
@@ -113,10 +104,12 @@
   ];
 
   // ===== Elements =====
-  const playerCountEl = document.getElementById("playerCount");
-  const rollCountEl = document.getElementById("rollCount");
+  const playerCountRadios = [
+    document.getElementById("playerCount1"),
+    document.getElementById("playerCount2"),
+    document.getElementById("playerCount3")
+  ];
   const allowDupEl = document.getElementById("allowDup");
-  const viewModeEl = document.getElementById("viewMode");
   const startBtn = document.getElementById("startBtn");
   const clearBtn = document.getElementById("clearBtn");
   const historyEl = document.getElementById("history");
@@ -208,7 +201,7 @@
 
     const head = document.createElement("div");
     head.className = "cardHead";
-    head.innerHTML = `<span class="name">${title}</span><span class="pill">${pill}</span>`;
+    head.innerHTML = `<span class=\"name\">${title}</span>`;
 
     const imgWrap = document.createElement("div");
     imgWrap.className = "imgWrap";
@@ -239,8 +232,8 @@
 
   function createBossCard(stageObj){
     return buildCard({
-      title: `ボス：${escapeHtml(stageObj.name)}`,
-      pill: `${escapeHtml(stageObj.type)}${stageObj.dlc ? " / DLC" : ""}`,
+      title: `${escapeHtml(stageObj.name)}`,
+      pill: "",
       imgSrc: stageObj.img,
       imgAlt: stageObj.name,
       fallbackHtml: "",
@@ -250,8 +243,8 @@
 
   function createCharCard(c, idx){
     return buildCard({
-      title: `キャラ${idx}：${escapeHtml(c.name)}`,
-      pill: `CHAR${c.dlc ? " / DLC" : ""}`,
+      title: `${escapeHtml(c.name)}`,
+      pill: "",
       imgSrc: c.img,
       imgAlt: c.name,
       fallbackHtml: "",
@@ -267,15 +260,9 @@
     head.className = "blockHead";
 
     const left = document.createElement("div");
-    left.innerHTML = `<b>抽選 #${rollIndex}</b> <span style="color:var(--muted); font-size:12px;">（${picks.length}人）</span>`;
-
-    const right = document.createElement("div");
-    right.className = "meta";
-    right.innerHTML = `BOSS: <b>${escapeHtml(stageObj.name)}</b> (${escapeHtml(stageObj.type)})` +
-      (stageObj.dlc ? ` <span style="color:#ffcc66; font-weight:900;">DLC</span>` : ``);
+    left.innerHTML = `<b>抽選 #${rollIndex}</b> <span style=\"color:var(--muted); font-size:12px;\">（${picks.length}人）</span>`;
 
     head.appendChild(left);
-    head.appendChild(right);
     block.appendChild(head);
 
     const row = document.createElement("div");
@@ -289,8 +276,7 @@
 
   function updateStartBtnState(){
     try {
-      const nPlayers = Math.max(1, Math.min(3, Number(playerCountEl.value || 3)));
-      playerCountEl.value = String(nPlayers);
+      const nPlayers = Number(playerCountRadios.find(r => r.checked)?.value || 3);
 
       if (enabledStageTypes().length === 0) {
         startBtn.disabled = true;
@@ -326,18 +312,15 @@
       updateStartBtnState();
       if (startBtn.disabled) return;
 
-      const nPlayers = Math.max(1, Math.min(3, Number(playerCountEl.value || 3)));
-      const nRolls = Math.max(1, Math.min(50, Number(rollCountEl.value || 1)));
+      const nPlayers = Number(playerCountRadios.find(r => r.checked)?.value || 3);
       const allowDup = !!allowDupEl.checked;
-      const mode = viewModeEl.value;
 
-      if (mode === "latest") historyEl.innerHTML = "";
-
-      for (let r=1; r<=nRolls; r++) {
-        const stageObj = pickStageFiltered();
-        const picks = pickCharacters(nPlayers, allowDup);
-        historyEl.appendChild(createResultBlock(picks, stageObj, r));
-      }
+      // 履歴数を取得
+      let startIndex = historyEl.children.length;
+      const stageObj = pickStageFiltered();
+      const picks = pickCharacters(nPlayers, allowDup);
+      const resultBlock = createResultBlock(picks, stageObj, startIndex + 1);
+      historyEl.insertBefore(resultBlock, historyEl.firstChild);
 
     } catch (e) {
       showWarn(e.message);
@@ -352,7 +335,7 @@
   startBtn.addEventListener("click", doStart);
   clearBtn.addEventListener("click", clearAll);
 
-  [playerCountEl, rollCountEl, allowDupEl, viewModeEl, fNormal, fEverdark, fDeep, fDLC]
+  [...playerCountRadios, allowDupEl, fNormal, fEverdark, fDeep, fDLC]
     .forEach(el => el.addEventListener("change", updateStartBtnState));
 
   updateStartBtnState();
