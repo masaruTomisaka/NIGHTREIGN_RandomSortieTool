@@ -44,6 +44,20 @@ button {
   background: linear-gradient(90deg, var(--accent), #9b7aff);
 }
 
+/* ===== 右上バージョン表記 ===== */
+.version-label {
+  position: fixed;
+  top: 16px;
+  right: 24px;
+  background: rgba(30, 34, 54, 0.85);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
 button.secondary {
   background: linear-gradient(90deg, #2a334a, #1b2337);
   color: var(--text);
