@@ -56,13 +56,13 @@ button:disabled {
 }
 
 /* ===== 抽選結果（1行レイアウト） ===== */
+
 .resultRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  overflow-x: hidden;
   padding-bottom: 6px;
-  scroll-snap-type: x mandatory;
 }
 
 .resultRow::-webkit-scrollbar {
@@ -77,12 +77,11 @@ button:disabled {
 /* ===== カード共通 ===== */
 .card {
   position: relative;
-  flex: 0 0 240px;
+  width: auto;
   background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
   border: 1px solid var(--border);
   border-radius: 14px;
   overflow: hidden;
-  scroll-snap-align: start;
 }
 
 .cardHead {
