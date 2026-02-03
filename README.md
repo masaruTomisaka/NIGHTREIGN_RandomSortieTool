@@ -1,11 +1,11 @@
 # NIGHTREIGN ランダム出撃ツール / NIGHTREIGN Random Sortie Tool
 
 ELDEN RING NIGHTREIGNのためのランダム出撃ツールです。GitHub Pagesで公開しています。
+
 A random sortie tool for ELDEN RING NIGHTREIGN. Published via GitHub Pages.
 
 ## サイトURL / Website URL
 - [NIGHTREIGN ランダム出撃ツール](https://rururu13014982.github.io/NIGHTREIGN_RandomSortieTool/)
-- [Visit NIGHTREIGN Random Sortie Tool](https://rururu13014982.github.io/NIGHTREIGN_RandomSortieTool/)
 
 ## 機能 / Features
 - 出撃キャラ数の選択（1～3人） / Select number of sortie characters (1-3)
