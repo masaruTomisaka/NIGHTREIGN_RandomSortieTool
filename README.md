@@ -23,6 +23,7 @@ A random sortie tool for ELDEN RING NIGHTREIGN. Published via GitHub Pages.
 - `css/base.css` : 共通レイアウト・配色 / Common layout & colors
 - `css/components.css` : UIコンポーネント定義 / UI components
 - `css/iphone-portrait.css` : iPhone縦画面用CSS / iPhone portrait CSS
+- `js/main.js` : 抽選処理スクリプト / random selection script
 
 ## その他 / Others
 ご質問・要望はIssueへどうぞ。
