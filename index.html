@@ -17,9 +17,12 @@
 
 <main>
   <section class="panel">
-    <h2>抽選設定</h2>
+    <h2>設定</h2>
 
     <div class="controls">
+      <button id="startBtn">抽選</button>
+      <button id="clearBtn" class="secondary">クリア</button>
+
       <label>出撃キャラ数
         <input type="radio" name="playerCount" id="playerCount1" value="1"><span>1</span>
         <input type="radio" name="playerCount" id="playerCount2" value="2"><span>2</span>
@@ -48,11 +51,9 @@
 
       <label class="filterTag" style="--stage:#ffcc66;">
         <span class="dot" style="background:#ffcc66;"></span>
-        <input type="checkbox" id="fDLC" checked> DLCを含める
+        <input type="checkbox" id="fDLC" checked> DLC
       </label>
 
-      <button id="startBtn">抽選開始</button>
-      <button id="clearBtn" class="secondary">クリア</button>
     </div>
 
     <div id="warnBox" class="warn"></div>
@@ -60,7 +61,7 @@
     <h2 style="margin-top:18px;">抽選結果</h2>
     <div id="history" style="margin-top:10px; display:grid; gap:12px;"></div>
   </section>
-  <span style="float:right;">Ver. 1.0.4</span>
+  <span style="float:right;">Ver. 1.0.5</span>
 </main>
 <script src="./js/main.js"></script>
 </body>
